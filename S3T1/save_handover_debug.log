@@ -1,0 +1,111 @@
+2026-08-26 08:48:41 - Received payload: {"sourceDept":"10085","destinationDept":"11090","sender":"BRYAN","random_code":"3D62B3EB9335","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":35.32,"remark":"QR: N\/A | Authorized: BRYAN","sourceDept":"10085","destinationDept":"11090"}]}
+2026-08-26 08:48:41 - Dept weights updated: 35.32 from 10085 to 11090
+2026-08-26 08:48:41 - Inventory created: ID 28219, Product: ISSUE_TRANS, Weight: 35.32
+2026-08-26 08:48:41 - Log created for Inventory ID: 28219
+2026-08-26 08:48:41 - Logs inserted: 1, Inventory items: 1
+2026-08-26 08:48:41 - QR Tracking updated: 3D62B3EB9335 -> in_transit
+2026-08-27 07:12:13 - Received payload: {"sourceDept":"10085","destinationDept":"11090","sender":"BRYAN","random_code":"C27B85600D61","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":20.43,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"10085","destinationDept":"11090"}]}
+2026-08-27 07:12:13 - Dept weights updated: 20.43 from 10085 to 11090
+2026-08-27 07:12:13 - Inserting inventory: C27B85600D61, 20.43, 11090
+2026-08-27 07:12:13 - Inventory created: ID 28400
+2026-08-27 07:12:13 - Creating log for Inventory ID: 28400
+2026-08-27 07:12:13 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 07:12:13 - QR Tracking updated: C27B85600D61 -> in_transit
+2026-08-27 07:49:01 - Received payload: {"sourceDept":"10085","destinationDept":"11090","sender":"BRYAN","random_code":"F7501F81154D","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":88.14,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"10085","destinationDept":"11090"}]}
+2026-08-27 07:49:01 - Dept weights updated: 88.14 from 10085 to 11090
+2026-08-27 07:49:01 - Inserting inventory: F7501F81154D, 88.14, 11090
+2026-08-27 07:49:01 - Inventory created: ID 29020
+2026-08-27 07:49:01 - Creating log for Inventory ID: 29020
+2026-08-27 07:49:01 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 07:49:01 - QR Tracking updated: F7501F81154D -> in_transit
+2026-08-27 08:04:47 - Received payload: {"sourceDept":"11090","destinationDept":"10085","sender":"BRYAN","random_code":"F7501F81154D","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":20.14,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"11090","destinationDept":"10085"}]}
+2026-08-27 08:04:47 - Dept weights updated: 20.14 from 11090 to 10085
+2026-08-27 08:04:47 - Inserting inventory: F7501F81154D, 20.14, 10085
+2026-08-27 08:04:47 - Inventory created: ID 29023
+2026-08-27 08:04:47 - Creating log for Inventory ID: 29023
+2026-08-27 08:04:47 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 08:04:47 - QR Tracking updated: F7501F81154D -> active
+2026-08-27 08:05:42 - Received payload: {"sourceDept":"11090","destinationDept":"10085","sender":"BRYAN","random_code":"F7501F81154D","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":102.28,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"11090","destinationDept":"10085"}]}
+2026-08-27 08:05:42 - Dept weights updated: 102.28 from 11090 to 10085
+2026-08-27 08:05:42 - Inserting inventory: F7501F81154D, 102.28, 10085
+2026-08-27 08:05:42 - Inventory created: ID 29024
+2026-08-27 08:05:42 - Creating log for Inventory ID: 29024
+2026-08-27 08:05:42 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 08:05:42 - QR Tracking updated: F7501F81154D -> active
+2026-08-27 08:16:23 - Received payload: {"sourceDept":"10085","destinationDept":"11090","sender":"BRYAN","random_code":"F7501F81154D","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":20.71,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"10085","destinationDept":"11090"}]}
+2026-08-27 08:16:23 - Dept weights updated: 20.71 from 10085 to 11090
+2026-08-27 08:16:23 - Inserting inventory: F7501F81154D, 20.71, 11090
+2026-08-27 08:16:23 - Inventory created: ID 29026
+2026-08-27 08:16:23 - Creating log for Inventory ID: 29026
+2026-08-27 08:16:23 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 08:16:23 - QR Tracking updated: F7501F81154D -> in_transit
+2026-08-27 08:28:39 - Received payload: {"sourceDept":"11090","destinationDept":"10085","sender":"BRYAN","random_code":"C27B85600D61","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":335.76,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"11090","destinationDept":"10085"}]}
+2026-08-27 08:28:39 - Dept weights updated: 335.76 from 11090 to 10085
+2026-08-27 08:28:39 - Inserting inventory: C27B85600D61, 335.76, 10085
+2026-08-27 08:28:39 - Inventory created: ID 29031
+2026-08-27 08:28:39 - Creating log for Inventory ID: 29031
+2026-08-27 08:28:39 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 08:28:39 - QR Tracking updated: C27B85600D61 -> active
+2026-08-27 08:29:11 - Received payload: {"sourceDept":"10085","destinationDept":"11090","sender":"BRYAN","random_code":"C27B85600D61","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":20.68,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"10085","destinationDept":"11090"}]}
+2026-08-27 08:29:11 - Dept weights updated: 20.68 from 10085 to 11090
+2026-08-27 08:29:11 - Inserting inventory: C27B85600D61, 20.68, 11090
+2026-08-27 08:29:11 - Inventory created: ID 29032
+2026-08-27 08:29:11 - Creating log for Inventory ID: 29032
+2026-08-27 08:29:11 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 08:29:11 - QR Tracking updated: C27B85600D61 -> in_transit
+2026-08-27 08:30:00 - Received payload: {"sourceDept":"11090","destinationDept":"10085","sender":"BRYAN","random_code":"C27B85600D61","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":20.66,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"11090","destinationDept":"10085"}]}
+2026-08-27 08:30:00 - Dept weights updated: 20.66 from 11090 to 10085
+2026-08-27 08:30:00 - Inserting inventory: C27B85600D61, 20.66, 10085
+2026-08-27 08:30:00 - Inventory created: ID 29034
+2026-08-27 08:30:00 - Creating log for Inventory ID: 29034
+2026-08-27 08:30:00 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 08:30:00 - QR Tracking updated: C27B85600D61 -> active
+2026-08-27 08:30:46 - Received payload: {"sourceDept":"11090","destinationDept":"10085","sender":"BRYAN","random_code":"F7501F81154D","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":20.66,"remark":"QR: LUX | Authorized: BRYAN","sourceDept":"11090","destinationDept":"10085"}]}
+2026-08-27 08:30:46 - Dept weights updated: 20.66 from 11090 to 10085
+2026-08-27 08:30:46 - Inserting inventory: F7501F81154D, 20.66, 10085
+2026-08-27 08:30:46 - Inventory created: ID 29035
+2026-08-27 08:30:46 - Creating log for Inventory ID: 29035
+2026-08-27 08:30:46 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 08:30:46 - QR Tracking updated: F7501F81154D -> active
+2026-08-27 09:11:31 - Received payload: {"sourceDept":"10085","destinationDept":"14094","sender":"ADRIAN ","random_code":"F7501F81154D","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":20.13,"remark":"QR: abc | Authorized: ADRIAN","sourceDept":"10085","destinationDept":"14094"}]}
+2026-08-27 09:11:31 - Dept weights updated: 20.13 from 10085 to 14094
+2026-08-27 09:11:31 - Inserting inventory: F7501F81154D, 20.13, 14094
+2026-08-27 09:11:31 - Inventory created: ID 29045
+2026-08-27 09:11:31 - Creating log for Inventory ID: 29045
+2026-08-27 09:11:31 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 09:11:31 - QR Tracking updated: F7501F81154D -> in_transit
+2026-08-27 09:17:00 - Received payload: {"sourceDept":"11090","destinationDept":"10085","sender":"BRYAN","random_code":"F7501F81154D","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":7.06,"remark":"QR: abc | Authorized: BRYAN","sourceDept":"11090","destinationDept":"10085"}]}
+2026-08-27 09:17:00 - Dept weights updated: 7.06 from 11090 to 10085
+2026-08-27 09:17:00 - Inserting inventory: F7501F81154D, 7.06, 10085
+2026-08-27 09:17:00 - Inventory created: ID 29046
+2026-08-27 09:17:00 - Creating log for Inventory ID: 29046
+2026-08-27 09:17:00 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 09:17:00 - QR Tracking updated: F7501F81154D -> active
+2026-08-27 10:28:08 - Received payload: {"sourceDept":"10085","destinationDept":"14094","sender":"ADRIAN ","random_code":"F7501F81154D","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":12.64,"remark":"QR: LUX | Authorized: ADRIAN","sourceDept":"10085","destinationDept":"14094"}]}
+2026-08-27 10:28:08 - Dept weights updated: 12.64 from 10085 to 14094
+2026-08-27 10:28:08 - Inserting inventory: F7501F81154D, 12.64, 14094
+2026-08-27 10:28:08 - Inventory created: ID 29070
+2026-08-27 10:28:08 - Creating log for Inventory ID: 29070
+2026-08-27 10:28:08 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 10:28:08 - QR Tracking updated: F7501F81154D -> in_transit
+2026-08-27 10:28:41 - Received payload: {"sourceDept":"14094","destinationDept":"10085","sender":"ADRIAN ","random_code":"F7501F81154D","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":5.04,"remark":"QR: LUX | Authorized: ADRIAN","sourceDept":"14094","destinationDept":"10085"}]}
+2026-08-27 10:28:41 - Dept weights updated: 5.04 from 14094 to 10085
+2026-08-27 10:28:41 - Inserting inventory: F7501F81154D, 5.04, 10085
+2026-08-27 10:28:41 - Inventory created: ID 29071
+2026-08-27 10:28:41 - Creating log for Inventory ID: 29071
+2026-08-27 10:28:41 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-27 10:28:41 - QR Tracking updated: F7501F81154D -> active
+2026-08-28 04:58:33 - Received payload: {"sourceDept":"10085","destinationDept":"14094","sender":"ADRIAN ","random_code":"CARD_TRANSFER","mode":"OUT","transfers":[{"productname":"ISSUE_TRANS","amount":25.31,"remark":"HandOver Outbound","sourceDept":"10085","destinationDept":"14094"}]}
+2026-08-28 04:58:33 - Dept weights updated: 25.31 from 10085 to 14094
+2026-08-28 04:58:33 - Inserting inventory: CARD_TRANSFER, 25.31, 14094
+2026-08-28 04:58:33 - Inventory created: ID 29178
+2026-08-28 04:58:33 - Creating log for Inventory ID: 29178
+2026-08-28 04:58:33 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-28 04:58:33 - QR Tracking updated: CARD_TRANSFER -> in_transit
+2026-08-28 04:58:53 - Received payload: {"sourceDept":"14094","destinationDept":"10085","sender":"ADRIAN ","random_code":"CARD_TRANSFER","mode":"IN","transfers":[{"productname":"RETURN_TRANS","amount":25.29,"remark":"HandOver Inbound","sourceDept":"14094","destinationDept":"10085"}]}
+2026-08-28 04:58:53 - Dept weights updated: 25.29 from 14094 to 10085
+2026-08-28 04:58:53 - Inserting inventory: CARD_TRANSFER, 25.29, 10085
+2026-08-28 04:58:53 - Inventory created: ID 29179
+2026-08-28 04:58:53 - Creating log for Inventory ID: 29179
+2026-08-28 04:58:53 - Transaction committed. InsertCount: 1, LogCount: 1
+2026-08-28 04:58:53 - QR Tracking updated: CARD_TRANSFER -> active

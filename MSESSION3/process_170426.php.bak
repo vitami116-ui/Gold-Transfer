@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MILANO Safe 2 to Pihua</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .id-card { transition: all 0.4s ease; opacity: 0.15; filter: grayscale(1); }
+        .id-card.active { opacity: 1; filter: grayscale(0); border-color: rgba(59,130,246,0.5); }
+        .id-card.verified { border-color: #10b981 !important; box-shadow: 0 0 20px rgba(16,185,129,0.2); }
+        .glow-btn { box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); transition: all 0.3s ease; }
+        .glow-btn:hover { box-shadow: 0 0 40px rgba(234, 179, 8, 0.6); transform: translateY(-2px); }
+        .reset-btn { transition: all 0.3s ease; border: 1px solid rgba(239, 68, 68, 0.2); }
+    </style>
+</head>
+<body class="h-screen flex flex-col items-center justify-center p-4">
+
+<div class="w-full max-w-5xl flex justify-between items-center mb-8 px-4">
+    <div class="flex items-center gap-4">
+        <a href="index.php" class="orbitron tracking-[0.2em] text-xl font-bold text-yellow-500 hover:text-yellow-400">MILANO GMS</a>
+        <div id="status_pill" class="orbitron border border-slate-700 px-4 py-1 rounded-full text-[50px] tracking-widest uppercase">
+            Detecting Mode...
+        </div>
+    </div>
+    <div class="orbitron text-[10px] text-slate-500 uppercase">
+        Connected to: <span class="text-white" id="scale_display_ip">Checking...</span>
+    </div>
+</div>
+
+<div class="w-full max-w-5xl grid grid-cols-12 gap-8">
+    <div class="col-span-4 space-y-6">
+        <div id="card_1234" class="id-card glass p-4 rounded-xl flex gap-4 items-center border border-transparent">
+            <img src="https://ui-avatars.com/api/?name=Lawrence&background=3b82f6&color=fff" class="w-14 h-14 rounded-lg">
+            <div>
+                <p class="text-[10px] text-blue-400 font-bold uppercase">Sender [1234]</p>
+                <h3 class="font-bold text-lg">pyng </h3>
+                <p id="label_1234" class="text-[10px] text-slate-500 italic">Wait for scan...</p>
+            </div>
+        </div>
+
+        <div id="card_1235" class="id-card glass p-4 rounded-xl flex gap-4 items-center border border-transparent">
+            <img src="https://ui-avatars.com/api/?name=Bernard&background=eab308&color=000" class="w-14 h-14 rounded-lg">
+            <div>
+                <p class="text-[10px] text-yellow-500 font-bold uppercase">Receiver [1235]</p>
+                <h3 class="font-bold text-lg">Pi Hua (Outside)</h3>
+                <p id="label_1235" class="text-[10px] text-slate-500 italic">Waiting...</p>
+            </div>
+        </div>
+        
+        <button onclick="location.href='index.php'" class="reset-btn w-full orbitron text-[10px] py-3 rounded-xl text-slate-500 uppercase tracking-widest">
+            ✕ Abort & Go Back
+        </button>
+    </div>
+
+    <div class="col-span-8 glass rounded-[2.5rem] p-10 flex flex-col items-center justify-center relative border-t border-white/10 shadow-2xl">
+        <div id="monitor_ui" class="absolute top-10 opacity-0 transition-opacity">
+            <div class="bg-blue-500/20 border border-blue-500/50 px-4 py-1 rounded text-blue-400 orbitron text-xs">
+                INPUT: <span id="live_text" class="text-white ml-2 tracking-widest"></span>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center mb-10">
+            <p id="weight_label" class="orbitron text-[10px] text-slate-500 tracking-[0.3em] mb-2 uppercase text-center">Current Weight</p>
+            <div id="weight_display" class="orbitron text-[120px] font-black text-white leading-none">0.000<span class="text-3xl text-slate-700 ml-2">g</span></div>
+        </div>
+
+        <div id="submit_area" class="hidden flex flex-col items-center">
+            <button onclick="executeBackEnd()" class="glow-btn bg-yellow-500 text-black orbitron px-16 py-6 rounded-2xl font-black text-xl tracking-[0.2em]">
+                CONFIRM & SUBMIT
+            </button>
+            <button onclick="location.reload()" class="mt-6 text-[10px] orbitron text-slate-500 hover:text-white uppercase tracking-widest">↻ Reset & Re-weigh</button>
+        </div>
+
+        <div id="scan_prompt" class="orbitron text-sm text-blue-400 animate-pulse uppercase tracking-widest">
+            PLEASE SCAN SENDER (1234)
+        </div>
+    </div>
+</div>
+
+<script>
+// --- CONFIGURATION ---
+const urlParams = new URLSearchParams(window.location.search);
+const currentMode = (urlParams.get('mode') || 'IN').toUpperCase(); // Force uppercase for logic check
+const SCALE_IP = "192.168.0.7";
+
+// UI Mode Styling
+const statusPill = document.getElementById('status_pill');
+statusPill.innerText = `MODE: ${currentMode}BOUND`;
+statusPill.classList.add(currentMode === 'IN' ? 'text-emerald-400' : 'text-blue-400');
+document.getElementById('scale_display_ip').innerText = SCALE_IP;
+
+// --- STATE ---
+let finalWeight = 0.000;
+let senderVerified = false;
+let receiverVerified = false;
+let scanBuffer = "";
+let timer = null;
+window.scaleInterval = null;
+
+// --- SCANNER LOGIC ---
+window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'Enter') {
+        handleScan(scanBuffer.trim());
+        scanBuffer = "";
+        document.getElementById('monitor_ui').classList.add('opacity-0');
+    } else if (e.key.length === 1) {
+        scanBuffer += e.key;
+        document.getElementById('live_text').innerText = scanBuffer;
+        document.getElementById('monitor_ui').classList.remove('opacity-0');
+        clearTimeout(timer);
+        timer = setTimeout(() => { 
+            scanBuffer = ""; 
+            document.getElementById('monitor_ui').classList.add('opacity-0'); 
+        }, 2000);
+    }
+});
+
+function handleScan(code) {
+    if (!senderVerified && code === "0005523962") {
+        senderVerified = true;
+        document.getElementById('card_1234').classList.add('active', 'verified');
+        document.getElementById('label_1234').innerText = "VERIFIED";
+        document.getElementById('scan_prompt').innerText = "STABILIZING WEIGHT...";
+        startScalePolling();
+    } else if (senderVerified && !receiverVerified && code === "0005541303") {
+        receiverVerified = true;
+        document.getElementById('card_1235').classList.add('active', 'verified');
+        document.getElementById('label_1235').innerText = "VERIFIED";
+        document.getElementById('scan_prompt').classList.add('hidden');
+        document.getElementById('submit_area').classList.remove('hidden');
+    }
+}
+
+// --- SCALE POLLING (With 3s Expiration Logic) ---
+function startScalePolling() {
+    if (window.scaleInterval) clearInterval(window.scaleInterval);
+
+    window.scaleInterval = setInterval(() => {
+        fetch(`http://${SCALE_IP}:5000/weight`)
+            .then(r => r.json())
+            .then(data => {
+                const w = parseFloat(data.weight);
+                
+                // data.valid comes from Go backend (checks if data is < 3s old)
+                if (data.valid && w > 0) {
+                    finalWeight = w;
+                    document.getElementById('weight_display').innerHTML = 
+                        `${data.weight}<span class="text-3xl text-slate-600 ml-2">g</span>`;
+                    
+                    document.getElementById('scan_prompt').innerText = "WEIGHT LOCKED. SCAN RECEIVER (1235)";
+                    document.getElementById('scan_prompt').classList.replace('text-blue-400', 'text-yellow-500');
+                    
+                    // Stop polling once we have a stable, valid weight
+                    clearInterval(window.scaleInterval);
+                } else {
+                    // Reset UI if data expires or is 0
+                    document.getElementById('weight_display').innerHTML = 
+                        `0.000<span class="text-3xl text-slate-600 ml-2">g</span>`;
+                    document.getElementById('scan_prompt').innerText = "WAITING FOR STABLE WEIGHT...";
+                    finalWeight = 0;
+                }
+            })
+            .catch(() => {
+                clearInterval(window.scaleInterval);
+                document.getElementById('scan_prompt').innerText = "SCALE OFFLINE - CHECK SERVICE";
+                document.getElementById('scan_prompt').classList.replace('text-blue-400', 'text-red-500');
+            });
+    }, 800);
+}
+
+// --- SUBMISSION (With Direction Logic) ---
+async function executeBackEnd() {
+    if (finalWeight <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'INVALID WEIGHT',
+            text: 'Weight must be greater than 0.000g to submit.',
+            background: '#020617', color: '#fff'
+        });
+        return;
+    }
+
+    // Direction Mapping
+    let sDept, dDept;
+    if (currentMode === 'OUT') {
+        sDept = 10085; // Outside Dept
+        dDept = 10093; // Inside Dept
+    } else {
+        sDept = 10093; // Inside Dept
+        dDept = 10085; // Outside Dept
+    }
+
+    const payload = {
+        sourceDept: sDept,
+        destinationDept: dDept,
+        sender: "Lawrence",
+        transfers: [{
+            productname: "NO START YET",
+            amount: finalWeight,
+            remark: `Handover ${currentMode}bound`,
+            sourceDept: sDept,
+            destinationDept: dDept
+        }]
+    };
+
+    console.log("Submitting Payload:", payload);
+
+    Swal.fire({ title: 'RECORDING...', background: '#020617', color: '#fff', didOpen: () => Swal.showLoading() });
+
+    try {
+        const res = await fetch(`save_handover.php`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+
+        const rawResponse = await res.text();
+        let result;
+        
+        try {
+            result = JSON.parse(rawResponse);
+        } catch (e) {
+            console.error("Server Error:", rawResponse);
+            return Swal.fire({ icon: 'error', title: 'Server Error', text: 'Invalid JSON. Check Console.' });
+        }
+
+        if (result.success) {
+            Swal.fire({ icon: 'success', title: 'TRANSFER COMPLETE', background: '#020617', color: '#fff' })
+                .then(() => location.href = 'index.php');
+        } else {
+            Swal.fire({ icon: 'error', title: 'SAVE FAILED', text: result.message });
+        }
+    } catch (err) {
+        Swal.fire('Error', 'Network Failure: ' + err.message, 'error');
+    }
+}
+</script>
+</body>
+</html>

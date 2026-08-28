@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MILANO UNIVERSAL TRANSFER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .orbitron { font-family: 'Orbitron', sans-serif; }
+        .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .id-card { transition: all 0.4s ease; opacity: 0.15; filter: grayscale(1); }
+        .id-card.active { opacity: 1; filter: grayscale(0); border-color: rgba(59,130,246,0.5); }
+        .id-card.verified { border-color: #10b981 !important; box-shadow: 0 0 20px rgba(16,185,129,0.2); }
+        
+        .glow-btn-yellow { box-shadow: 0 0 20px rgba(234, 179, 8, 0.4); }
+        .glow-btn-yellow:hover { box-shadow: 0 0 40px rgba(234, 179, 8, 0.6); transform: translateY(-2px); }
+        .glow-btn-red { box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+        .glow-btn-red:hover { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6); transform: translateY(-2px); }
+        
+        .reset-btn { transition: all 0.3s ease; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        /* Multi-state classes */
+        .state-not-ready { background: #eab308 !important; color: black !important; border-color: #eab308 !important; }
+        .state-powder { background: #ef4444 !important; color: white !important; border-color: #ef4444 !important; }
+    </style>
+</head>
+<body class="h-screen flex flex-col items-center justify-center p-4">
+
+<div class="w-full max-w-5xl flex justify-between items-center mb-8 px-4">
+    <div class="flex items-center gap-4">
+        <a href="index.php" id="logo_link" class="orbitron tracking-[0.2em] text-xl font-bold hover:opacity-80">MILANO GMS</a>
+        <div id="status_pill" class="orbitron border border-slate-700 px-4 py-1 rounded-full text-[50px] tracking-widest uppercase">
+            Detecting Mode...
+        </div>
+    </div>
+    <div class="orbitron text-[10px] text-slate-500 uppercase">
+        Connected to: <span class="text-white" id="scale_display_ip">Checking...</span>
+    </div>
+</div>
+
+<div class="w-full max-w-5xl grid grid-cols-12 gap-8">
+    <div class="col-span-4 space-y-6">
+        <div id="card_1234" class="id-card glass p-4 rounded-xl flex gap-4 items-center border border-transparent">
+            <img src="https://ui-avatars.com/api/?name=Lawrence&background=3b82f6&color=fff" class="w-14 h-14 rounded-lg">
+            <div>
+                <p id="sender_label_color" class="text-[10px] font-bold uppercase">Sender [1234]</p>
+                <h3 class="font-bold text-lg">娥姐 </h3>
+                <p id="label_1234" class="text-[10px] text-slate-500 italic">Wait for scan...</p>
+            </div>
+        </div>
+
+        <div id="card_1236" class="id-card glass p-4 rounded-xl flex gap-4 items-center border border-transparent">
+            <img src="https://ui-avatars.com/api/?name=Bernard&background=eab308&color=000" class="w-14 h-14 rounded-lg">
+            <div>
+                <p id="receiver_label_color" class="text-[10px] font-bold uppercase">Receiver [1236]</p>
+                <h3 class="font-bold text-lg">拾模 (Outside)</h3>
+                <p id="label_1236" class="text-[10px] text-slate-500 italic">Waiting...</p>
+            </div>
+        </div>
+        
+        <button onclick="location.href='index.php'" class="reset-btn w-full orbitron text-[10px] py-3 rounded-xl text-slate-500 uppercase tracking-widest">
+            ✕ Abort & Go Back
+        </button>
+    </div>
+
+    <div class="col-span-8 glass rounded-[2.5rem] p-10 flex flex-col items-center justify-center relative border-t border-white/10 shadow-2xl">
+        <div id="monitor_ui" class="absolute top-10 opacity-0 transition-opacity">
+            <div id="input_monitor_box" class="border px-4 py-1 rounded orbitron text-xs">
+                INPUT: <span id="live_text" class="text-white ml-2 tracking-widest"></span>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center mb-10">
+            <p id="weight_label" class="orbitron text-[10px] text-slate-500 tracking-[0.3em] mb-2 uppercase text-center">Current Weight</p>
+            <div id="weight_display" class="orbitron text-[120px] font-black text-white leading-none">0.000<span class="text-3xl text-slate-700 ml-2">g</span></div>
+        </div>
+
+        <div id="submit_area" class="hidden flex flex-col items-center">
+            <div id="mode_toggle_container" class="hidden mb-6">
+                <button id="state_btn" onclick="cycleState()" class="border border-slate-700 px-8 py-2 rounded-full orbitron text-[10px] tracking-widest transition-all text-slate-400">
+                    STATUS: DEFAULT
+                </button>
+            </div>
+
+            <button id="main_submit_btn" onclick="executeBackEnd()" class="orbitron px-16 py-6 rounded-2xl font-black text-xl tracking-[0.2em] transition-all">
+                CONFIRM & SUBMIT
+            </button>
+            <button onclick="location.reload()" class="mt-6 text-[10px] orbitron text-slate-500 hover:text-white uppercase tracking-widest">↻ Reset & Re-weigh</button>
+        </div>
+
+        <div id="scan_prompt" class="orbitron text-sm animate-pulse uppercase tracking-widest">
+            PLEASE SCAN SENDER (1234)
+        </div>
+    </div>
+</div>
+
+<script>
+// --- CONFIGURATION ---
+const urlParams = new URLSearchParams(window.location.search);
+const currentMode = (urlParams.get('mode') || 'IN').toUpperCase();
+const SCALE_IP = "192.168.0.6";
+
+// --- DYNAMIC COLOR LOGIC ---
+const statusPill = document.getElementById('status_pill');
+const submitBtn = document.getElementById('main_submit_btn');
+const logo = document.getElementById('logo_link');
+const scanPrompt = document.getElementById('scan_prompt');
+const inputMonitor = document.getElementById('input_monitor_box');
+const senderLbl = document.getElementById('sender_label_color');
+const receiverLbl = document.getElementById('receiver_label_color');
+
+if (currentMode === 'IN') {
+    statusPill.innerText = `MODE: INBOUND`;
+    statusPill.classList.add('text-yellow-400');
+    logo.classList.add('text-yellow-500');
+    submitBtn.classList.add('bg-yellow-500', 'text-black', 'glow-btn-yellow');
+    scanPrompt.classList.add('text-yellow-400');
+    inputMonitor.classList.add('bg-yellow-500/20', 'border-yellow-500/50', 'text-yellow-400');
+    senderLbl.classList.add('text-yellow-500');
+    receiverLbl.classList.add('text-yellow-500');
+    document.getElementById('mode_toggle_container').classList.remove('hidden');
+} else {
+    statusPill.innerText = `MODE: OUTBOUND`;
+    statusPill.classList.add('text-red-500');
+    logo.classList.add('text-red-600');
+    submitBtn.classList.add('bg-red-600', 'text-white', 'glow-btn-red');
+    scanPrompt.classList.add('text-red-500');
+    inputMonitor.classList.add('bg-red-500/20', 'border-red-500/50', 'text-red-400');
+    senderLbl.classList.add('text-red-500');
+    receiverLbl.classList.add('text-red-500');
+}
+
+document.getElementById('scale_display_ip').innerText = SCALE_IP;
+
+// --- STATE ---
+let finalWeight = 0.000;
+let senderVerified = false;
+let receiverVerified = false;
+let itemStatus = 0; // 0: Default, 1: Not Ready, 2: Powder
+let scanBuffer = "";
+let timer = null;
+window.scaleInterval = null;
+
+// --- TRI-STATE LOGIC ---
+function cycleState() {
+    itemStatus = (itemStatus + 1) % 3;
+    const btn = document.getElementById('state_btn');
+    
+    // Reset classes
+    btn.classList.remove('state-not-ready', 'state-powder', 'text-slate-400');
+    
+    if (itemStatus === 0) {
+        btn.innerText = "STATUS: DEFAULT";
+        btn.classList.add('text-slate-400');
+    } else if (itemStatus === 1) {
+        btn.innerText = "STATUS: NOT READY";
+        btn.classList.add('state-not-ready');
+    } else if (itemStatus === 2) {
+        btn.innerText = "STATUS: POWDER";
+        btn.classList.add('state-powder');
+    }
+}
+
+// --- SCANNER LOGIC ---
+window.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'Enter') {
+        handleScan(scanBuffer.trim());
+        scanBuffer = "";
+        document.getElementById('monitor_ui').classList.add('opacity-0');
+    } else if (e.key.length === 1) {
+        scanBuffer += e.key;
+        document.getElementById('live_text').innerText = scanBuffer;
+        document.getElementById('monitor_ui').classList.remove('opacity-0');
+        clearTimeout(timer);
+        timer = setTimeout(() => { 
+            scanBuffer = ""; 
+            document.getElementById('monitor_ui').classList.add('opacity-0'); 
+        }, 2000);
+    }
+});
+
+function handleScan(code) {
+// Pointing to the root directory from /mx
+fetch(`../check_card.php?code=${code}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "authorized") {
+            senderVerified = true;
+            receiverVerified = true;
+
+            // Display real database info on the Milano UI
+            document.getElementById('label_1234').innerText = "VERIFIED: " + data.owner;
+            document.getElementById('label_1236').innerText = data.sDept + " -> " + data.dDept;
+
+            const prompt = document.getElementById('scan_prompt');
+            prompt.innerText = "STABILIZING WEIGHT...";
+            prompt.classList.remove('hidden');
+
+            startScalePolling();
+        } else {
+            // Milano Security: Alert if card is not in the system
+            alert("SECURITY ALERT: Card " + code + " not found in registry.");
+        }
+    });
+}
+
+function startScalePolling() {
+    if (window.scaleInterval) clearInterval(window.scaleInterval);
+    
+    window.scaleInterval = setInterval(() => {
+        fetch(`http://${SCALE_IP}:5000/weight`)
+            .then(r => r.json())
+            .then(data => {
+                const w = parseFloat(data.weight);
+                
+                // Only "Lock" if the data is valid and weight is actually there
+                if (data.valid && w > 0.001) { 
+                    finalWeight = w;
+                    
+                    // Update Display
+                    document.getElementById('weight_display').innerHTML = 
+                        `${w.toFixed(3)}<span class="text-3xl text-slate-600 ml-2">g</span>`;
+                    
+                    // Show the submit button area
+                    document.getElementById('submit_area').classList.remove('hidden');
+                    
+                    // Update Prompt
+                    const prompt = document.getElementById('scan_prompt');
+                    prompt.innerText = "WEIGHT CAPTURED";
+                    prompt.style.color = (currentMode === 'IN') ? '#fbbf24' : '#ef4444';
+                    
+                    // IMPORTANT: Stop polling once we have a valid weight!
+                    // This prevents it from resetting to 0 if the item is moved.
+                    clearInterval(window.scaleInterval);
+                } else {
+                    // While waiting for a stable weight, don't overwrite a 
+                    // previously captured weight with 0.
+                    document.getElementById('weight_display').innerHTML = 
+                        `WAITING...<span class="text-3xl text-slate-600 ml-2">g</span>`;
+                }
+            })
+            .catch(() => {
+                clearInterval(window.scaleInterval);
+                const prompt = document.getElementById('scan_prompt');
+                prompt.innerText = "SCALE OFFLINE - CHECK SERVICE";
+                prompt.classList.remove('hidden');
+                prompt.style.color = '#ff4444';
+            });
+    }, 800);
+}
+
+// --- SUBMISSION ---
+async function executeBackEnd() {
+    if (finalWeight <= 0) {
+        Swal.fire({ icon: 'error', title: 'INVALID WEIGHT', text: 'Weight must be greater than 0.000g.', background: '#020617', color: '#fff' });
+        return;
+    }
+
+    let sDept, dDept;
+    if (currentMode === 'OUT') {
+        sDept = 10085; dDept = 10091;
+    } else {
+        sDept = 10091; dDept = 10085;
+    }
+
+    // Determine Product Name based on Cycle State
+    let finalProductName = "NO START YET";
+    if (currentMode === 'IN') {
+        if (itemStatus === 1) finalProductName = "INCOMPLETE";
+        else if (itemStatus === 2) finalProductName = "POWDER";
+    }
+
+    const payload = {
+        sourceDept: sDept,
+        destinationDept: dDept,
+        sender: "娥姐",
+        transfers: [{
+            productname: finalProductName,
+            amount: finalWeight,
+            remark: `Handover ${currentMode}bound`,
+            sourceDept: sDept,
+            destinationDept: dDept
+        }]
+    };
+
+    Swal.fire({ title: 'RECORDING...', background: '#020617', color: '#fff', showConfirmButton: false, didOpen: () => Swal.showLoading() });
+
+    try {
+        const res = await fetch(`save_handover.php`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+            Swal.fire({ 
+                icon: 'success', 
+                title: 'TRANSFER COMPLETE', 
+                background: '#020617', 
+                color: '#fff', 
+                timer: 800, 
+                showConfirmButton: false 
+            }).then(() => location.href = 'index.php');
+        } else {
+            Swal.fire({ icon: 'error', title: 'SAVE FAILED', text: result.message });
+        }
+    } catch (err) {
+        Swal.fire('Error', 'Network Failure: ' + err.message, 'error');
+    }
+}
+</script>
+</body>
+</html>
